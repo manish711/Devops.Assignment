@@ -11,8 +11,6 @@ var testDir = Directory("Test Summary");
 var deployDir = Directory("deploy");
 var artifactsDir = Directory("artifacts");
 
-var apps = new [] {"HelloWorld","UnitTestProject"};
-
 Task("Clean")
     .Does(() =>
 {
@@ -57,22 +55,7 @@ Task("Test")
 Task("Package")
   .IsDependentOn("Build")
   .Does(() => {
-    var nuGetPackSettings   = new NuGetPackSettings {
-                                    Id                      = "HelloWorld",
-                                    Version                 = "0.0.0.1",
-                                    Title                   = "Hello World",
-                                    Authors                 = new[] {"Manish Narang"},
-                                    Description             = "Devops Assignment cake.build scripts.",
-                                    Summary                 = "Excellent summary of what the Cake (C# Make) build tool does.",
-                                    ProjectUrl              = new Uri("https://github.com/manish711/Devops.Assignment"),
-                                    Files                   = new [] {
-                                                                        new NuSpecContent {Source = "HelloWorld.exe", Target = "bin"},
-                                                                      },
-                                    BasePath                = "./src/HelloWorld/bin/Debug",
-                                    OutputDirectory         = "./nuget"
-                                };
-
-    NuGetPack(nuGetPackSettings);
+		ZipCompress(buildDir, deployDir + File("HelloWorld.zip") );     
   });
   
 Task("Delete")
