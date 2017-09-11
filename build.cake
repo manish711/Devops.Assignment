@@ -55,7 +55,7 @@ Task("Test")
 Task("Package")
   .IsDependentOn("Build")
   .Does(() => {
-		ZipCompress(buildDir, deployDir + File("HelloWorld.zip") );     
+		ZipCompress("./src/HelloWorld/bin/Debug/HelloWorld.exe", deployDir + File("HelloWorld.zip") );     
   });
   
 Task("Delete")
