@@ -53,7 +53,7 @@ Task("Run-Integration-Tests")
 Task("Package")
   .IsDependentOn("Run-Unit-Tests")
   .Does(() => {
-		ZipCompress("./src/HelloWorld/bin/Debug/HelloWorld.exe", deployDir + File("HelloWorld.zip") );     
+		ZipCompress("C:/TeamCity/buildAgent/work/93d5b16485bb0707/src/HelloWorld/bin/Debug/HelloWorld.exe", deployDir + File("HelloWorld.zip") );     
   });
   
 Task("Delete")
