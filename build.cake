@@ -51,7 +51,7 @@ Task("Run-Integration-Tests")
 });
 
 Task("Package")
-  .IsDependentOn("Build")
+  .IsDependentOn("Run-Unit-Tests")
   .Does(() => {
 		ZipCompress("./src/HelloWorld/bin/Debug/HelloWorld.exe", deployDir + File("HelloWorld.zip") );     
   });
