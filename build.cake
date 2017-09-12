@@ -36,20 +36,18 @@ Task("Build")
   MSBuild("./src/HelloWorld.sln");
 });
 
-Task("Test")
-	.IsDependentOn("Build")
+Task("Run-Unit-Tests")
+    .IsDependentOn("Build")
     .Does(() =>
 {
-   var testProjects = GetFiles("./src/tests/**/*.csproj");
-    foreach(var testProject in testProjects) {
-        DotCoverCover(
-            tool => tool.DotNetCoreTest(testProject.FullPath),
-            testDir + testProject.GetFilenameWithoutExtension() + ".dcvr",
-            new DotCoverCoverSettings()                
-                .WithFilter("-:*Tests"));
-    }
-    DotCoverMerge(GetFiles(testDir.Path + "/*.dcvr"), testDir + File("iae.dcvr"));
-    TeamCity.ImportDotCoverCoverage(testDir + File("iae.dcvr"));
+    MSTest("./src/tests/UnitTestProject/bin/debug/UnitTestProject.dll");
+});
+
+Task("Run-Integration-Tests")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+    MSTest("./src/tests/IntegrationTestProject/bin/debug/IntegrationTestProject.dll");
 });
 
 Task("Package")
