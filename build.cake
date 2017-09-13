@@ -36,20 +36,24 @@ Task("Build")
   MSBuild("./src/HelloWorld.sln");
 });
 
-Task("Run-Tests")
+Task("Run-Unit-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
-	var testProjects = GetFiles("./src/tests/**/bin/Debug/*TestProject.dll");
-    foreach(var testProject in testProjects) {
-	MSTest(testProject);
-	}    
+    MSTest("./src/tests/UnitTestProject/bin/debug/UnitTestProject.dll");
+});
+
+Task("Run-Integration-Tests")
+    .IsDependentOn("Run-Unit-Tests")
+    .Does(() =>
+{
+    MSTest("./src/tests/IntegrationTestProject/bin/debug/IntegrationTestProject.dll");
 });
 
 Task("Package")
-  .IsDependentOn("Run-Tests")
+  .IsDependentOn("Run-Integration-Tests")
   .Does(() => {
-		ZipCompress("./src/HelloWorld/bin/Debug", deployDir + File("HelloWorld.zip") );     
+		ZipCompress("./src/HelloWorld/bin/Debug/HelloWorld.exe", deployDir + File("HelloWorld.zip") );     
   });
   
 Task("Delete")
@@ -58,7 +62,6 @@ Task("Delete")
 {
 	CleanDirectory(buildDir);
 });
-
 
 // set default task
 Task("Default").IsDependentOn("Delete");
