@@ -36,22 +36,18 @@ Task("Build")
   MSBuild("./src/HelloWorld.sln");
 });
 
-Task("Run-Unit-Tests")
+Task("Run-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    MSTest("./src/tests/UnitTestProject/bin/debug/UnitTestProject.dll");
-});
-
-Task("Run-Integration-Tests")
-    .IsDependentOn("Build")
-    .Does(() =>
-{
-    MSTest("./src/tests/IntegrationTestProject/bin/debug/IntegrationTestProject.dll");
+	var testProjects = GetFiles("./src/tests/**/bin/Debug/*TestProject.dll");
+    foreach(var testProject in testProjects) {
+	MSTest(testProject);
+	}    
 });
 
 Task("Package")
-  .IsDependentOn("Run-Unit-Tests")
+  .IsDependentOn("Run-Tests")
   .Does(() => {
 		ZipCompress("./src/HelloWorld/bin/Debug", deployDir + File("HelloWorld.zip") );     
   });
